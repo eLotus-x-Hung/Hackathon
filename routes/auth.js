@@ -4,22 +4,32 @@ const jwt = require('jsonwebtoken');
 const {registerValidation, loginValidation} = require('../validations.js');
 const User = require('../models/UserModel');
 
-// Routers
+/**
+ * @desc Routers
+ */
 router.post('/register', async (req, res) => {
 
-    // Validation check
+    /**
+     * @desc Validation check
+     */
     const {error} = registerValidation(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
-    // Username uniqueness check
+    /**
+     * @desc Username uniqueness check
+     */
     const usernameExists = await User.findOne({ username: req.body.username });
     if(usernameExists) return res.status(400).send('Username address already exists');
 
-    // Hash the password
+    /**
+     * @desc Hash the password
+     */
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
-    // Save user
+    /**
+     * @desc Save user
+     */
     const user = User({
         username: req.body.username,
        password: hashedPassword
@@ -35,19 +45,27 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
 
-    // Validation check
+    /**
+     * @desc Validation check
+     */
     const {error} = loginValidation(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
-    // Username existance check
+    /**
+     * @desc Username existance check
+     */
     const registeredUser = await User.findOne({ username: req.body.username });
     if(!registeredUser) return res.status(400).send('User with this username does not exist');
 
-    // Check password
+    /**
+     * @desc Check password
+     */
     const passwordMatch = bcrypt.compareSync(req.body.password, registeredUser.password);
     if(!passwordMatch) return res.status(400).send('Username or Password do not match');
 
-    // Create and assign JWT
+    /**
+     * @desc Create and assign JWT
+     */
     const token = jwt.sign({_id: registeredUser._id}, process.env.JWT_SECRET, {
         expiresIn: process.env.EXPIRE_TOKEN_TIME
     });

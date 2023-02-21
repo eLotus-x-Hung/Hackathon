@@ -8,6 +8,7 @@ require('dotenv/config'); // Environment variables
 // Route imports
 const homeRoutes = require('./routes/home')
 const authRoutes = require('./routes/auth')
+const uploadRoutes = require('./routes/upload')
 const privateRoutes = require('./routes/privateRoutes')
 
 
@@ -17,6 +18,7 @@ app.use(express.json());
 // -> Route Middlewares
 app.use('/', homeRoutes);
 app.use('/api/private', privateRoutes);
+app.use('/api/upload', uploadRoutes);
 app.use('/api/user', authRoutes);
 
 
