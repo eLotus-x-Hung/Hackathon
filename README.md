@@ -1,5 +1,7 @@
 # ExpressJS REST API
 
+_You can follow my e2e test at ./test/e2e.test.js to understand the workflow_
+
 ## Features:
 - Registration
 - Login
